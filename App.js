@@ -1,114 +1,105 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
-
-
-// const DATA = [
-//   {
-//     id: '01',
-//     title: 'First Item',
-//   },
-//   {
-//     id: '02',
-//     title: 'Second Item',
-//   },
-//   {
-//     id: '03',
-//     title: 'Third Item',
-//   },
-//   {
-//     id: '04',
-//     title: 'Fourth Item',
-//   },
-//   {
-//     id: '05',
-//     title: 'fifth Item',
-//   },
-//   {
-//     id: '06',
-//     title: 'sixth Item',
-//   },
-//   {
-//     id: '07',
-//     title: 'seventh Item',
-//   },
-//   {
-//     id: '08',
-//     title: 'eightth Item',
-//   },
-//   {
-//     id: '09',
-//     title: 'ninth Item',
-//   },
-//   {
-//     id: '10',
-//     title: 'Tenth Item',
-//   },
-//   {
-//     id: '11',
-//     title: 'eleventh Item',
-//   },
-//   {
-//     id: '12',
-//     title: 'Twelvth Item',
-//   },
-//   {
-//     id: '13',
-//     title: 'Thirteen Item',
-//   },
-//   {
-//     id: '14',
-//     title: 'fourteen Item',
-//   },
-//   {
-//     id: '15',
-//     title: 'fifteen Item',
-//   },
-// ];
-
-
-
+import React, { useEffect, useRef, useState } from "react";
+import { View, Text, StyleSheet, FlatList, Button } from "react-native"
 
 
 const App = () => {
 
-  const [data, setData] = useState();
+  const [data, setData] = useState([]);
 
   const getData = async () => {
-    const res = await fetch("https://api.sampleapis.com/coffee/iced");
-    const data = await res.json();
-    setData(data);
+    const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const results = await res.json();
+    setData(results);
   }
 
   useEffect(() => {
     getData();
   }, [])
 
-  const Item = (title , description) => {
+  const Item = ({ title, body }) => {
+    return (
+      <View style={styles.item}>
+        <Text>{title}</Text>
+        <Text>{body}</Text>
+      </View>
 
-    <View>
-      <Text>{title}</Text>
-      <Text>{description}</Text>
-    </View>
+    );
   }
-  const renderItem = (item , index) => {
-    <Item title={item.title} description={item.description} index={index}/>
+
+  const renderItem = ({ item }) => {
+    return (
+      <Item title={item.title} body={item.body} />
+    );
   }
+  const list = useRef(null);
+
+  const Press = () => {
+    list.current.scrollToEnd({ animated: true });
+  }
+
+  const Header = () => {
+    return (
+      <View style={styles.Header}>
+        <Text style={{ fontSize: 30 }}>Rendering list using FlatList</Text>
+        <Button onPress={()=> Press()} title="Go to end"/>
+      </View>
+    
+    );
+  }
+
+  const Footer = () => {
+    return (
+      <View style={styles.Footer}>
+        <Text style={{ fontSize: 30 }}>Footer Element</Text>
+      </View>
+    );
+  }
+
+
+
   return (
-    <View  style={styles.main}>
-    <FlatList 
-    data = {data}
-     renderItem={renderItem}
-    />
-
+    <View style={styles.main}>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
+        contentContainerStyle={styles.flatlistContainer}
+        ListHeaderComponent={Header}
+        ListFooterComponent={Footer}
+        onRefresh={() => console.log('refreshing')}
+        refreshing={false}
+        ref={list}
+      />
     </View>
   );
 }
 
 
 const styles = StyleSheet.create({
-  // main: {
-  // flex:1
-  // }
+  main: {
+    flex: 1,
+    padding: 16
+  },
+  item: {
+    fontSize: 20,
+    margin: 10,
+    padding: 10,
+    color: 'white',
+    backgroundColor: 'lightgreen'
+  },
+  flatlistContainer: {
+    flexGrow: 1,
+  },
+  Header: {
+    backgroundColor: 'lightblue',
+    padding: 10,
+    marginBottom: 10
+  },
+  Footer: {
+    backgroundColor: 'lightcoral',
+    padding: 10,
+    marginTop: 10,
+  },
 
 })
 
