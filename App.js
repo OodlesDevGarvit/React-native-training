@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Button } from "react-native"
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Header from "./Components/Header";
-import Home from "./Components/Home";
-import Login from "./Components/Login";
+import Header from "./Components/Header.js";
+import Home from "./Components/Home.js";
+import Login from "./Components/Login.js";
 
 const App = () => {
 
