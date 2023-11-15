@@ -6,9 +6,9 @@ import Header from "./Components/Header.js";
 import Home from "./Components/Home.js";
 import Login from "./Components/Login.js";
 
-const App = () => {
+const Stack = createNativeStackNavigator();
 
-  const Stack = createNativeStackNavigator();
+const App = () => {
 
   const addBtn = ()=>{
     console.warn("btn is called");
