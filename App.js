@@ -1,52 +1,52 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Button } from "react-native"
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Header from "./Components/Header.js";
-import Home from "./Components/Home.js";
-import Login from "./Components/Login.js";
-
-const Stack = createNativeStackNavigator();
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet ,ScrollView } from "react-native";
 
 const App = () => {
 
-  const addBtn = ()=>{
-    console.warn("btn is called");
+  const [data, setData] = useState([]);
+console.log(data);
+  //api call
+  const getApiData = async () => {
+    const url = "https://jsonplaceholder.typicode.com/posts";
+    let result = await fetch(url);
+     result = await result.json();
+     console.warn(result);
+    setData(result);
   }
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{
-          headerStyle:{
-            backgroundColor:"blue",
-          },
-          headerTintColor:"orange",
-          headerTitleStyle:{
-            fontSize:25
-          }
-        }} >
-        <Stack.Screen name="Login" component={Login}  
-        options={{
-          headerTitle:()=><Button title="left" onPress={addBtn}/>,
-          headerRight:()=><Header />,
-          headerStyle:{
-            backgroundColor:"blue",
-          },
-          headerTintColor:"white",
-          headerTitleStyle:{
-            fontSize:40
-          }
-        }}  
-        />
-        <Stack.Screen name="Home" component={Home} />
-      </Stack.Navigator>
-    </NavigationContainer>
+   useEffect(() => {
+    getApiData();
+   }, [])
 
+  return (
+
+    <ScrollView style={styles.main}>
+      <Text>API Integration</Text>
+       {
+        data.length ?
+          data.map((item)=>
+          <View style={{fontSize:10 , padding:20 , marginBottom:2 , borderBottomColor:"#fff" , borderBottomWidth:2}}>
+            <Text style={{backgroundColor:"#ddd"}}>{item.id}</Text>
+            <Text>{item.title}</Text>
+            <Text>{item.body}</Text>
+            </View>
+          )
+        : null     
+      } 
+    </ScrollView>
   );
 }
 
 
-
-
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    fontSize: 20
+  }
+})
 
 export default App;
+
+
+
+
