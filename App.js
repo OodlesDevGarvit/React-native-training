@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, TextInput } from "react-native";
 
 const App = () => {
 
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
 
   // const saveApiData = async () => {
   // const data = {
@@ -23,21 +26,37 @@ const App = () => {
   //   console.log("RESPONSE", response);
   // console.log("test");
   // }
+  const [data, setData] = useState("");
 
-const [data , setData] = useState("");
-
-  const getApiData = async() => {
+  const getApiData = async () => {
 
     const url = "http://192.168.1.41:3000/users";
-    let  result  = await fetch(url);
+    let result = await fetch(url);
     result = await result.json();
-  setData(result);
+    setData(result);
 
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     getApiData();
-  },[])
+  }, [])
+
+
+  const saveData = async() => {
+    const url = "http://192.168.1.41:3000/users";
+    const res = await fetch(url,{
+      method:"POST",
+      headers:{
+        "Content-type":"application/json"
+      },
+      body:JSON.stringify({name,age,email})
+    });
+    let result= await res.json();
+    if(result){
+      console.warn("Data is Added")
+    }
+  }
+
 
 
 
@@ -45,21 +64,48 @@ const [data , setData] = useState("");
 
     <View style={styles.main}>
 
-      {/* // Post api Method
-      <Text> Post API call</Text>
-      <Button title="save data" onPress={() => saveApiData()} /> */}
 
-      <Text style={{fontSize:20}}>Fetch Data from JSON Server API</Text>
-      {
+
+      <Text style={{ fontSize: 20 }}>Post API with Input Field Data</Text>
+
+      <TextInput
+        placeholder="Enter your name"
+        style={styles.TextBox}
+        value={name}
+        onChangeText={(text) => setName(text)}
+
+      />
+
+
+      <TextInput
+        placeholder="Enter your age"
+        style={styles.TextBox}
+        value={age}
+        onChangeText={(text) => setAge(text)}
+
+      />
+
+
+      <TextInput
+        placeholder="Enter your email"
+        style={styles.TextBox}
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+
+      />
+
+      <Button title="save data" onPress={saveData}/>
+
+
+      {/* {
         data.length ?
         data.map((item) => <View style ={styles.box}>
          <Text style={{fontSize:20}}>{item.name}</Text>
          <Text style={{fontSize:20}}>{item.age}</Text>
          <Text style={{fontSize:20}}>{item.email}</Text>
-         
         </View>)
         : null
-      }
+      } */}
 
 
 
@@ -72,10 +118,12 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
   },
-  box:{
-    padding:10,
-
+  TextBox:{
+    borderColor:"skyblue",
+    borderWidth:1,
+    margin:20
   }
+ 
 })
 
 export default App;
