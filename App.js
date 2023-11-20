@@ -1,39 +1,69 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet ,ScrollView } from "react-native";
+import { View, Text, StyleSheet, Button } from "react-native";
 
 const App = () => {
 
-  const [data, setData] = useState([]);
-console.log(data);
-  //api call
-  const getApiData = async () => {
-    const url = "https://jsonplaceholder.typicode.com/posts";
-    let result = await fetch(url);
-     result = await result.json();
-     console.warn(result);
-    setData(result);
+
+  // const saveApiData = async () => {
+  // const data = {
+  //   name:"patrik",
+  //   age:25,
+  //   email:"pat123@gmail.com",
+  //   id:89281
+  // }
+  //   const url = "192.168.11.42:3000/users";
+  //   console.log("CALLING API")
+  //   let result = await fetch(url, {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(data)
+  //   })
+  //   console.log("DONE CALLING")
+  //   response = await result.json();
+  //   console.log("RESPONSE", response);
+  // console.log("test");
+  // }
+
+const [data , setData] = useState("");
+
+  const getApiData = async() => {
+
+    const url = "http://192.168.1.41:3000/users";
+    let  result  = await fetch(url);
+    result = await result.json();
+  setData(result);
+
   }
 
-   useEffect(() => {
+  useEffect(()=>{
     getApiData();
-   }, [])
+  },[])
+
+
 
   return (
 
-    <ScrollView style={styles.main}>
-      <Text>API Integration</Text>
-       {
+    <View style={styles.main}>
+
+      {/* // Post api Method
+      <Text> Post API call</Text>
+      <Button title="save data" onPress={() => saveApiData()} /> */}
+
+      <Text style={{fontSize:20}}>Fetch Data from JSON Server API</Text>
+      {
         data.length ?
-          data.map((item)=>
-          <View style={{fontSize:10 , padding:20 , marginBottom:2 , borderBottomColor:"#fff" , borderBottomWidth:2}}>
-            <Text style={{backgroundColor:"#ddd"}}>{item.id}</Text>
-            <Text>{item.title}</Text>
-            <Text>{item.body}</Text>
-            </View>
-          )
-        : null     
-      } 
-    </ScrollView>
+        data.map((item) => <View style ={styles.box}>
+         <Text style={{fontSize:20}}>{item.name}</Text>
+         <Text style={{fontSize:20}}>{item.age}</Text>
+         <Text style={{fontSize:20}}>{item.email}</Text>
+         
+        </View>)
+        : null
+      }
+
+
+
+    </View>
   );
 }
 
@@ -41,7 +71,10 @@ console.log(data);
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    fontSize: 20
+  },
+  box:{
+    padding:10,
+
   }
 })
 
